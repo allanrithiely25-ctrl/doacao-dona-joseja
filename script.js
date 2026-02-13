@@ -8,11 +8,6 @@ window.onload = function() {
 async function gerarPix() {
   const valor = parseFloat(document.getElementById("valor").value);
 
-  if (valor < 5 || valor > 100) {
-    alert("Valor deve ser entre R$5 e R$100");
-    return;
-  }
-
   const response = await fetch("/api/createPix", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -20,6 +15,12 @@ async function gerarPix() {
   });
 
   const data = await response.json();
+
+  console.log("RESPOSTA API:", data);
+
+  alert(JSON.stringify(data));
+}
+
 
   if (data.qrCode) {
     document.getElementById("qrcode").innerHTML =
