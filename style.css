@@ -1,0 +1,51 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom, #ffffff, #f2f2f2);
+  text-align: center;
+}
+
+header {
+  padding: 40px;
+  background: white;
+}
+
+h1 {
+  color: #d62828;
+}
+
+.progress-bar {
+  width: 90%;
+  max-width: 600px;
+  height: 20px;
+  background: #eee;
+  margin: 20px auto;
+  border-radius: 30px;
+}
+
+.progress {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ff4d4d, #d62828);
+  border-radius: 30px;
+  transition: 2s;
+}
+
+.doacao-box {
+  background: white;
+  width: 90%;
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+button {
+  background: #d62828;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
