@@ -11,7 +11,7 @@ exports.handler = async (event) => {
       },
       body: JSON.stringify({
         amount: amount,
-        description: "Doação - Cirurgia Dona Joseja",
+        description: "Doação - Cirurgia Dona Josefa",
         payerName: "Doacao Site",
         payerDocument: "00000000000"
       })
@@ -31,3 +31,4 @@ exports.handler = async (event) => {
     };
   }
 };
+
