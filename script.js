@@ -21,40 +21,41 @@ async function gerarPix() {
 
   const data = await response.json();
 
-  console.log("Resposta da API:", data);
+  console.log("Resposta ElitePay:", data);
 
-  // CASO 1: QR Code em base64
-  if (data.qrcodeUrl) {
+  const qrcodeDiv = document.getElementById("qrcode");
+  qrcodeDiv.innerHTML = "";
+
+  // ✅ CASO 1 — QR CODE EM BASE64
+  if (data.qrcodeUrl && data.qrcodeUrl.startsWith("base64:")) {
     const base64 = data.qrcodeUrl.replace("base64:", "");
-    document.getElementById("qrcode").innerHTML =
-      `<img src="data:image/png;base64,${base64}" width="250">`;
+
+    qrcodeDiv.innerHTML = `
+      <img src="data:image/png;base64,${base64}" width="250" />
+      <p><strong>Escaneie o QR Code para pagar</strong></p>
+    `;
   }
 
-  // CASO 2: Código PIX copia e cola
-  else if (data.copyPaste) {
-    gerarQrCode(data.copyPaste);
-  }
-
-  else {
-    alert("Erro ao gerar pagamento PIX");
+  // ✅ CASO 2 — CÓDIGO PIX COPIA E COLA
+  if (data.copyPaste) {
+    qrcodeDiv.innerHTML += `
+      <textarea id="pixCode" readonly style="width:90%;height:80px;margin-top:10px;">
+${data.copyPaste}
+      </textarea>
+      <br>
+      <button onclick="copiarPix()">Copiar código PIX</button>
+    `;
   }
 
   if (data.transactionId) {
     verificarPagamento(data.transactionId);
+  } else {
+    alert("Erro: transação não criada");
   }
 }
-
-function gerarQrCode(texto) {
-  document.getElementById("qrcode").innerHTML = "";
-  QRCode.toCanvas(
-    document.getElementById("qrcode"),
-    texto,
-    { width: 250 },
-    function (error) {
-      if (error) console.error(error);
-    }
-  );
+function copiarPix() {
+  const textarea = document.getElementById("pixCode");
+  textarea.select();
+  document.execCommand("copy");
+  alert("Código PIX copiado!");
 }
-
-
-  
