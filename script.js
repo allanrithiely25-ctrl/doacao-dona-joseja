@@ -8,6 +8,11 @@ window.onload = function() {
 async function gerarPix() {
   const valor = parseFloat(document.getElementById("valor").value);
 
+  if (valor < 5 || valor > 100) {
+    alert("Valor deve ser entre R$5 e R$100");
+    return;
+  }
+
   const response = await fetch("/api/createPix", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -16,35 +21,40 @@ async function gerarPix() {
 
   const data = await response.json();
 
-  console.log("RESPOSTA API:", data);
+  console.log("Resposta da API:", data);
 
-  alert(JSON.stringify(data));
-}
-
-
-  if (data.qrCode) {
+  // CASO 1: QR Code em base64
+  if (data.qrcodeUrl) {
+    const base64 = data.qrcodeUrl.replace("base64:", "");
     document.getElementById("qrcode").innerHTML =
-      `<img src="data:image/png;base64,${data.qrCode}" width="250" />`;
+      `<img src="data:image/png;base64,${base64}" width="250">`;
+  }
 
+  // CASO 2: Código PIX copia e cola
+  else if (data.copyPaste) {
+    gerarQrCode(data.copyPaste);
+  }
+
+  else {
+    alert("Erro ao gerar pagamento PIX");
+  }
+
+  if (data.transactionId) {
     verificarPagamento(data.transactionId);
   }
 }
 
-async function verificarPagamento(transactionId) {
-  const interval = setInterval(async () => {
-
-    const response = await fetch("/api/checkPayment", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ transactionId })
-    });
-
-    const data = await response.json();
-
-    if (data.transaction?.transactionState === "COMPLETO") {
-      clearInterval(interval);
-      alert("Pagamento confirmado! Obrigado ❤️");
+function gerarQrCode(texto) {
+  document.getElementById("qrcode").innerHTML = "";
+  QRCode.toCanvas(
+    document.getElementById("qrcode"),
+    texto,
+    { width: 250 },
+    function (error) {
+      if (error) console.error(error);
     }
-
-  }, 5000);
+  );
 }
+
+
+  
